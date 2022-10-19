@@ -25,29 +25,12 @@ def main():
     # Loading subset of query images
     query_subset_video_ids = pd.read_csv(QUERY_SUBSET).video_id.values
     reference_video_ids = pd.read_csv(REFERENCE_METADATA).video_id.values
-    # int_video_ids = [int(vid[1:]) for vid in query_subset_video_ids]
     predictions = []
     for query_video_id in query_subset_video_ids:
         overlap = predict_overlap(query_video_id, reference_video_ids)
         predictions.append(overlap)
     pd.DataFrame(predictions).to_csv(OUTPUT_FILE, index=False)
 
-
-if __name__ == "__main__":
-    main()
-
-
-def main():
-    # Loading subset of query images
-    query_subset_video_ids = pd.read_csv(QUERY_SUBSET).video_id.values
-    reference_video_ids = pd.read_csv(REFERENCE_METADATA).video_id.values
-
-    predictions = []
-    for query_video_id in query_subset_video_ids:
-        overlap = predict_overlap(query_video_id, reference_video_ids)
-        predictions.append(overlap)
-
-    pd.DataFrame(predictions).to_csv(OUTPUT_FILE, index=False)
 
 if __name__ == "__main__":
     main()
