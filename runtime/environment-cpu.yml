@@ -1,0 +1,42 @@
+name: condaenv
+channels:
+  - conda-forge
+  - fastai
+  - metric-learning
+  - pytorch
+  - esri
+dependencies:
+  - python=3.9.13
+  - pytorch=1.12.1
+  - pytorch-lightning=1.6.5
+  - pytorch-metric-learning=1.6.2
+  - lightning-flash[image,video]=0.7.5
+  - torchvision=0.13.0
+  - torchaudio=0.12.1
+  - cpuonly=2.0
+  - tensorflow-cpu=2.9.1
+  - tensorflow-estimator=2.9.1
+  - tensorflow-hub=0.12.0
+  - numpy=1.23.3
+  - pandas=1.5.0
+  - faiss-cpu=1.7.2
+  - scikit-learn=1.1.2
+  - scikit-image=0.19.3
+  - scipy=1.9.1
+  - pytest=7.1.3
+  - pip=22.2.2
+  - ffmpeg-python=0.2.0
+  - pillow=9.2.0
+  - opencv=4.6.0
+  - keras=2.9.0
+  - fastai=2.7.9
+  - loguru=0.6.0
+  - tqdm=4.64.1
+  - python-magic=0.4.27
+  - imageio=2.22.0
+  - numba=0.56.2
+  - hydra-core=1.2.0
+  - timm=0.4.12
+  - einops=0.4.1
+  - pip:
+    - augly==1.0.0
