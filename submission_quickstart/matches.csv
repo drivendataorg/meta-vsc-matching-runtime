@@ -1,4 +1,0 @@
-query_id,reference_id,query_start,query_end,reference_start,reference_end,score
-Q200000,R209536,1,1,1,1,1.0
-Q200001,R209536,1,1,1,1,1.0
-Q200003,R209536,1,1,1,1,1.0

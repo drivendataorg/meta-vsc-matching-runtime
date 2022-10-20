@@ -27,10 +27,10 @@ exit_code=0
 
     # Tar the full matches csv and the subset matches csv together to form the submission file
     less subset_matches.csv
-    less matches.csv
+    less full_matches.csv
     tar -czvf /code_execution/submission/submission.tar.gz \
         subset_matches.csv \
-        matches.csv
+        full_matches.csv
 
     echo "================ END ================"
 } |& tee "/code_execution/submission/log.txt"
