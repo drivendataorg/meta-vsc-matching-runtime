@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:1.2
-FROM nvidia/cuda:11.3.1-base-ubuntu20.04
+FROM nvidia/cuda:11.0.3-base-ubuntu20.04
 # adapated from build file for pangeo images
 # https://github.com/pangeo-data/pangeo-docker-images
 
@@ -19,7 +19,8 @@ ENV NB_PYTHON_PREFIX=${CONDA_DIR}/envs/${CONDA_ENV} \
     DASK_ROOT_CONFIG=${CONDA_DIR}/etc \
     CPU_OR_GPU=${CPU_OR_GPU} \
     HOME=/home/${RUNTIME_USER} \
-    PATH=${CONDA_DIR}/bin:${PATH}
+    PATH=${CONDA_DIR}/bin:${PATH} \
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CONDA_DIR}/envs/${CONDA_ENV}/lib
 
 # ======================== root ========================
 # initialize paths we will use
@@ -42,7 +43,7 @@ RUN echo "Installing base packages..." \
     && apt-get update --fix-missing \
     && apt-get install -y apt-utils 2> /dev/null \
     && apt-get install -y wget zip tzdata \
-    && apt-get install -y libgl1-mesa-glx \
+    && apt-get install -y libgl1-mesa-glx libstdc++6 \
     && xargs -a /home/${RUNTIME_USER}/apt.txt apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /home/${RUNTIME_USER}/apt.txt
@@ -63,10 +64,13 @@ RUN echo "Installing Miniforge..." \
 
 # Switch back to root for installing conda packages
 COPY environment-${CPU_OR_GPU}.yml /home/${RUNTIME_USER}/environment.yml
+COPY requirements.txt /home/${RUNTIME_USER}/requirements.txt
 RUN mamba env create --name ${CONDA_ENV} -f /home/${RUNTIME_USER}/environment.yml  \
     && mamba clean -afy \
+    && conda run --no-capture-output -n ${CONDA_ENV} pip install --no-deps -r /home/${RUNTIME_USER}/requirements.txt \
     && conda run pip cache purge \
     && rm /home/${RUNTIME_USER}/environment.yml \
+    && rm /home/${RUNTIME_USER}/requirements.txt \
     && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
     && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete \
     && find ${CONDA_DIR} -follow -type f -name '*.js.map' -delete
