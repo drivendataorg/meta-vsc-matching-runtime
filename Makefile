@@ -84,8 +84,11 @@ pack-quickstart:
 ifneq (,$(wildcard ./submission/submission.zip))
 	$(error You already have a submission/submission.zip file. Rename or remove that file (e.g., rm submission/submission.zip).)
 endif
-	python submission_quickstart/generate_valid_random_descriptors.py
-	cd submission_quickstart; zip -r ../submission/submission.zip main.py query_descriptors.npz reference_descriptors.npz
+	cd submission_quickstart; zip -r ../submission/submission.zip main.py full_matches.csv
+
+# Test the quickstart solution
+test-quickstart: 
+	make pack-quickstart && make test-submission
 
 ## Creates a submission/submission.zip file from the source code in submission_benchmark
 pack-benchmark:
