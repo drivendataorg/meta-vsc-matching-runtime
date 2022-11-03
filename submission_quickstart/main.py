@@ -12,11 +12,11 @@ REFERENCE_METADATA = DATA_DIRECTORY / "test/reference_metadata.csv"
 def predict_overlap(video_id, reference_video_ids) -> np.ndarray:
     overlap = dict()
     overlap["query_id"] = video_id
-    overlap["reference_id"] = reference_video_ids[0]
+    overlap["ref_id"] = reference_video_ids[0]
     overlap["query_start"] = 1.0
     overlap["query_end"] = 2.0
-    overlap["reference_start"] = 3.0
-    overlap["reference_end"] = 4.0
+    overlap["ref_start"] = 3.0
+    overlap["ref_end"] = 4.0
     overlap["score"] = 0.5
     return overlap
 

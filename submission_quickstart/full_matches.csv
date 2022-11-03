@@ -1,4 +1,4 @@
-query_id,reference_id,query_start,query_end,reference_start,reference_end,score
+query_id,ref_id,query_start,query_end,ref_start,ref_end,score
 Q100001,R100001,1.,2.,3.,4.,1.0
 Q100002,R100002,1.,2.,3.,4.,1.0
 Q100003,R100003,1.,2.,3.,4.,1.0
