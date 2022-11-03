@@ -26,8 +26,6 @@ exit_code=0
     fi
 
     # Tar the full matches csv and the subset matches csv together to form the submission file
-    less subset_matches.csv
-    less full_matches.csv
     tar -czvf /code_execution/submission/submission.tar.gz \
         subset_matches.csv \
         full_matches.csv

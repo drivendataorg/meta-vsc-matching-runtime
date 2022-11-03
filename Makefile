@@ -54,11 +54,11 @@ _submission_write_perms:
 
 ## Builds the container locally
 build:
-	docker buildx build --build-arg CPU_OR_GPU=${CPU_OR_GPU} -t ${LOCAL_IMAGE} runtime
+	docker buildx build --build-arg CPU_OR_GPU=${CPU_OR_GPU} -t ${LOCAL_IMAGE} --progress=plain runtime
 
 ## Ensures that your locally built container can import all the Python packages successfully when it runs
 test-container: build _submission_write_perms
-	docker run \
+	docker run ${GPU_ARGS} \
 		${TTY_ARGS} \
 		--mount type=bind,source="$(shell pwd)"/runtime/tests,target=/tests,readonly \
 		${LOCAL_IMAGE} \
@@ -66,7 +66,7 @@ test-container: build _submission_write_perms
 
 ## Start your locally built container and open a bash shell within the running container; same as submission setup except has network access
 interact-container: build _submission_write_perms
-	docker run \
+	docker run ${GPU_ARGS}\
 		--mount type=bind,source="$(shell pwd)"/data,target=/data,readonly \
 		--mount type=bind,source="$(shell pwd)"/submission,target=/code_execution/submission \
 		--shm-size 8g \
@@ -84,7 +84,8 @@ pack-quickstart:
 ifneq (,$(wildcard ./submission/submission.zip))
 	$(error You already have a submission/submission.zip file. Rename or remove that file (e.g., rm submission/submission.zip).)
 endif
-	cd submission_quickstart; zip -r ../submission/submission.zip ./*
+	python submission_quickstart/generate_valid_random_descriptors.py
+	cd submission_quickstart; zip -r ../submission/submission.zip main.py query_descriptors.npz reference_descriptors.npz
 
 ## Creates a submission/submission.zip file from the source code in submission_benchmark
 pack-benchmark:
@@ -200,6 +201,3 @@ help:
 		printf "\n"; \
 	}' \
 	| more $(shell test $(shell uname) = Darwin && echo '--no-init --raw-control-chars')
-
-test-quickstart:
-	rm -f submission/submission.zip && make build && make pack-quickstart && make test-submission
