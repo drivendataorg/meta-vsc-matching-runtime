@@ -22,7 +22,7 @@ jobs:
       LATEST_TAG: ${{ matrix.proc }}-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Image
         run: |
