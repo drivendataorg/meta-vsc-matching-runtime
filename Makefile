@@ -1,4 +1,4 @@
-.PHONY: build pull pack-benchmark pack-submission test-submission
+.PHONY: build pull pack-submission test-submission update-submodules data-subset
 
 # ================================================================================================
 # Settings
@@ -54,7 +54,12 @@ _submission_write_perms:
 
 ## Builds the container locally
 build:
-	docker buildx build --build-arg CPU_OR_GPU=${CPU_OR_GPU} -t ${LOCAL_IMAGE} --progress=plain runtime
+	docker build --build-arg CPU_OR_GPU=${CPU_OR_GPU} -t ${LOCAL_IMAGE} runtime
+
+# Fetch or update all submodules (vsc2022 and VCSL)
+update-submodules:
+	git pull && \
+	git submodule update --init --recursive
 
 ## Ensures that your locally built container can import all the Python packages successfully when it runs
 test-container: build _submission_write_perms
@@ -84,19 +89,8 @@ pack-quickstart:
 ifneq (,$(wildcard ./submission/submission.zip))
 	$(error You already have a submission/submission.zip file. Rename or remove that file (e.g., rm submission/submission.zip).)
 endif
+	python scripts/generate_valid_random_matches.py && \
 	cd submission_quickstart; zip -r ../submission/submission.zip main.py full_matches.csv
-
-# Test the quickstart solution
-test-quickstart: 
-	make pack-quickstart && make test-submission
-
-## Creates a submission/submission.zip file from the source code in submission_benchmark
-pack-benchmark:
-# Don't overwrite so no work is lost accidentally
-ifneq (,$(wildcard ./submission/submission.zip))
-	$(error You already have a submission/submission.zip file. Rename or remove that file (e.g., rm submission/submission.zip).)
-endif
-	cd benchmark_src; zip -r ../submission/submission.zip ./*
 
 ## Creates a submission/submission.zip file from the source code in submission_src
 pack-submission:
@@ -131,6 +125,10 @@ endif
 		--name ${CONTAINER_NAME} \
 		--rm \
 		${SUBMISSION_IMAGE}
+
+data-subset:
+	rm -f data/*.csv data/queries/*.mp4 && \
+	python scripts/generate_data_subset.py --dataset train --subset_fraction 0.01
 
 ## Delete temporary Python cache and bytecode files
 clean:
