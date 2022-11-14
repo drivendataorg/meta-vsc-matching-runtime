@@ -54,7 +54,10 @@ _submission_write_perms:
 
 ## Builds the container locally
 build:
-	docker build --build-arg CPU_OR_GPU=${CPU_OR_GPU} -t ${LOCAL_IMAGE} runtime
+	docker build \
+		--build-arg CPU_OR_GPU=${CPU_OR_GPU} \
+		-t ${LOCAL_IMAGE} \
+		-f runtime/Dockerfile .
 
 # Fetch or update all submodules (vsc2022 and VCSL)
 update-submodules:
