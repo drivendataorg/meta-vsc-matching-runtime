@@ -1,35 +1,63 @@
 from pathlib import Path
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 
 ROOT_DIRECTORY = Path("/code_execution")
 DATA_DIRECTORY = Path("/data")
 OUTPUT_FILE = ROOT_DIRECTORY / "subset_matches.csv"
-QUERY_SUBSET = DATA_DIRECTORY / "test/query_subset.csv"
-REFERENCE_METADATA = DATA_DIRECTORY / "test/reference_metadata.csv"
+QUERY_SUBSET = DATA_DIRECTORY / "query_subset.csv"
+QUERY_METADATA = DATA_DIRECTORY / "query_metadata.csv"
+REFERENCE_METADATA = DATA_DIRECTORY / "reference_metadata.csv"
 
 
-def predict_overlap(video_id, reference_video_ids) -> np.ndarray:
-    overlap = dict()
-    overlap["query_id"] = video_id
-    overlap["ref_id"] = reference_video_ids[0]
-    overlap["query_start"] = 1.0
-    overlap["query_end"] = 2.0
-    overlap["ref_start"] = 3.0
-    overlap["ref_end"] = 4.0
-    overlap["score"] = 0.5
-    return overlap
+def generate_interval(row, rng):
+    interval = np.sort(rng.random(2))
+    start, end = row.duration_sec.values[0] * interval
+    return start, end
+
+
+def generate_random_matches(query_meta, ref_meta) -> pd.DataFrame:
+    # Initialize a reproducible random number generator
+    rng = np.random.RandomState(42)
+
+    # Initialize return values
+    matches = []
+
+    # Generate random matches for each video
+    for _ in range(query_meta.shape[0]):
+        # Flip a coin!
+        if rng.random() < 0.5:
+            # Generate a random match
+            query = query_meta.sample()
+            query_start, query_end = generate_interval(query, rng)
+
+            ref = ref_meta.sample()
+            ref_start, ref_end = generate_interval(ref, rng)
+
+            score = rng.random()
+
+            matches.append({
+                "query_id": query.video_id.values[0],
+                "ref_id": ref.video_id.values[0],
+                "query_start": query_start,
+                "query_end": query_end,
+                "ref_start": ref_start,
+                "ref_end": ref_end,
+                "score": score
+            })
+
+    return pd.DataFrame.from_records(matches)
 
 
 def main():
-    # Loading subset of query images
-    query_subset_video_ids = pd.read_csv(QUERY_SUBSET).video_id.values
-    reference_video_ids = pd.read_csv(REFERENCE_METADATA).video_id.values
-    predictions = []
-    for query_video_id in query_subset_video_ids:
-        overlap = predict_overlap(query_video_id, reference_video_ids)
-        predictions.append(overlap)
-    pd.DataFrame(predictions).to_csv(OUTPUT_FILE, index=False)
+    query_metadata = pd.read_csv(QUERY_METADATA)
+    reference_metadata = pd.read_csv(REFERENCE_METADATA)
+
+    ### Generation of query matches happens here ######
+    matches = generate_random_matches(query_metadata, reference_metadata)
+
+    matches.to_csv(OUTPUT_FILE,index=False)
 
 
 if __name__ == "__main__":
