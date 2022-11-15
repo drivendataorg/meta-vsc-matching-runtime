@@ -99,13 +99,13 @@ If you are competing in both tracks of the competition, you can symlink `competi
 To test out the full execution pipeline, make sure Docker is running and then run the following commands in the terminal:
 
 1. **`make pull`** pulls the latest official Docker image from the container registry ([Azure](https://azure.microsoft.com/en-us/services/container-registry/)). You'll need an internet connection for this.
-2. **`make data-subset`** generates and copies a subset of the `competition_data/train` dataset into the `data` folder in the format it will exist in the code execution environment. By default, this will copy over videos and metadata from the training set, but you can modify both the proportion of videos copied and the source by editing the `Makefile`. Note that the subset of videos you will generate is different from the subset specified at runtime.
+2. **`make data-train-subset`** generates and copies a subset of the `competition_data/train` dataset into the `data` folder in the format it will exist in the code execution environment. By default, this will copy over videos and metadata from the training set, but you can modify both the proportion of videos copied and the source by editing the `Makefile`. Note that the subset of videos you will generate is different from the subset specified at runtime.
 3. **`make pack-quickstart`** generates valid, random matches for the full query and reference sets, and then zips the contents of the `submission_quickstart` directory (including the `main.py` script which generates random matches within the code execution environment) and saves it as `submission/submission.zip`. The `submission.zip` file will contain both the `full_matches.csv` and `main.py` files, and is what you will upload to the DrivenData competition site for code execution. But first we'll test that everything looks good locally (see next step).
 4. **`make test-submission`** will do a test run of your submission, simulating what happens during actual code execution. This command runs the Docker container with the requisite host directories mounted, and executes `main.py` to produce a tar file with your matches for the full set and the matches generated on the platform for a subset of query videos. 
 
 ```bash
 make pull
-make data-subset
+make data-train-subset
 make pack-quickstart
 make test-submission
 ```
@@ -126,7 +126,7 @@ This section provides instructions on how to develop and run your code submissio
 
 ```
 make pull
-make data-subset
+make data-test-subset
 make pack-submission
 make test-submission
 ```
@@ -262,7 +262,7 @@ To submit a pull request for a new package:
 
 4. Commit the changes to your forked repository.
 
-5. Open a pull request from your branch to the `main` branch of this repository. Navigate to the [Pull requests](TKTK) tab in this repository, and click the "New pull request" button. For more detailed instructions, check out [GitHub's help page](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork).
+5. Open a pull request from your branch to the `main` branch of this repository. Navigate to the [Pull requests](https://github.com/drivendataorg/meta-vsc-matching-runtime/pulls) tab in this repository, and click the "New pull request" button. For more detailed instructions, check out [GitHub's help page](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork).
 
 6. Once you open the pull request, Github Actions will automatically try building the Docker images with your changes and running the tests in `runtime/tests`. These tests can take up to 30 minutes, and may take longer if your build is queued behind others. You will see a section on the pull request page that shows the status of the tests and links to the logs.
 
