@@ -21,13 +21,11 @@ exit_code=0
         conda run --no-capture-output -n condaenv python main.py
 	    echo "... finished"
         else
-            echo "WARNING: Could not find main.py in submission.zip"
-            exit_code=1
+            echo "WARNING: Could not find main.py in submission.zip, generating empty file"
+            touch subset_matches.csv
     fi
 
     # Tar the full matches csv and the subset matches csv together to form the submission file
-    less subset_matches.csv
-    less full_matches.csv
     tar -czvf /code_execution/submission/submission.tar.gz \
         subset_matches.csv \
         full_matches.csv

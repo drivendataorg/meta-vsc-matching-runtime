@@ -19,7 +19,8 @@ ENV NB_PYTHON_PREFIX=${CONDA_DIR}/envs/${CONDA_ENV} \
     DASK_ROOT_CONFIG=${CONDA_DIR}/etc \
     CPU_OR_GPU=${CPU_OR_GPU} \
     HOME=/home/${RUNTIME_USER} \
-    PATH=${CONDA_DIR}/bin:${PATH}
+    PATH=${CONDA_DIR}/bin:${PATH} \
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CONDA_DIR}/envs/${CONDA_ENV}/lib
 
 # ======================== root ========================
 # initialize paths we will use
@@ -36,13 +37,13 @@ RUN echo "Creating ${RUNTIME_USER} user..." \
 
 # Install base packages
 ARG DEBIAN_FRONTEND=noninteractive
-COPY ./apt.txt /home/${RUNTIME_USER}
+COPY ./runtime/apt.txt /home/${RUNTIME_USER}
 RUN rm -f /etc/apt/sources.list.d/cuda.list && rm -f /etc/apt/sources.list.d/nvidia-ml.list
 RUN echo "Installing base packages..." \
     && apt-get update --fix-missing \
     && apt-get install -y apt-utils 2> /dev/null \
     && apt-get install -y wget zip tzdata \
-    && apt-get install -y libgl1-mesa-glx \
+    && apt-get install -y libgl1-mesa-glx libstdc++6 \
     && xargs -a /home/${RUNTIME_USER}/apt.txt apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /home/${RUNTIME_USER}/apt.txt
@@ -62,7 +63,7 @@ RUN echo "Installing Miniforge..." \
     && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
 # Switch back to root for installing conda packages
-COPY environment-${CPU_OR_GPU}.yml /home/${RUNTIME_USER}/environment.yml
+COPY ./runtime/environment-${CPU_OR_GPU}.yml /home/${RUNTIME_USER}/environment.yml
 RUN mamba env create --name ${CONDA_ENV} -f /home/${RUNTIME_USER}/environment.yml  \
     && mamba clean -afy \
     && conda run pip cache purge \
@@ -73,9 +74,8 @@ RUN mamba env create --name ${CONDA_ENV} -f /home/${RUNTIME_USER}/environment.ym
 
 # Copy run script into working dir and set it as the working doie
 USER root
-COPY scoring /opt/scoring
 WORKDIR /code_execution
 RUN mkdir predictions submission
-COPY --chown=appuser:appuser tests /code_execution/tests
-COPY --chown=appuser:appuser entrypoint.sh /code_execution/entrypoint.sh
+COPY --chown=appuser:appuser ./runtime/tests /code_execution/tests
+COPY --chown=appuser:appuser ./runtime/entrypoint.sh /code_execution/entrypoint.sh
 CMD ["/bin/bash", "/code_execution/entrypoint.sh"]
