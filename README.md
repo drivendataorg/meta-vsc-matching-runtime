@@ -150,7 +150,7 @@ Let's walk through what you'll need to do, step-by-step. The overall process her
    * Working off the `main.py` template we've provided, you'll want to add code as necessary to process the queries, cache intermediate results as necessary, and write out your matches.
    * Make sure any model weights or other files you need are also saved in `submission_src` (you can include these in that folder or in a subfolder, e.g., `submission_src/model_assets`)
 
-> Note: You may generate submissions that _only_ contain your descriptors, and not a `main.py` script. In this case, the platform will run a similarity search based on your descriptors and score the generated rankings so you can see how your solution performs on the test set without having to get inference running in the runtime. However, these submissions will _not_ be eligible for Phase 2 or prizes and they will also count against the weekly submission limit.
+> Note: You may generate submissions that _only_ contain your matches, and not a `main.py` script. In this case, score your matches so you can see how your solution performs on the test set without having to get inference running in the runtime. However, these submissions will _not_ be eligible for Phase 2 or prizes and they will also count against the weekly submission limit.
 
 4. **Create a `submission/submission.zip` file containing your code and model assets:**
 
@@ -172,7 +172,7 @@ Let's walk through what you'll need to do, step-by-step. The overall process her
    ```
 
 
-> ⚠️ **Remember** in the official code execution environment, `/data` will contain just the subset of test set query videos along with the full metadata CSV files for the test query and reference sets. When testing locally, the `/data` directory is a mounted version of whatever you have saved locally in this project's `data/` directory. `make data-train-subset` and `make data-test-subset` adds the appropriate metadata files and video files to the local `data/` directory - make sure the data subset you are mounting to the container corresponds to the full set of descriptors you are packing in your submission.
+> ⚠️ **Remember** in the official code execution environment, `/data` will contain just the subset of test set query videos along with the full metadata CSV files for the test query and reference sets. When testing locally, the `/data` directory is a mounted version of whatever you have saved locally in this project's `data/` directory. `make data-train-subset` and `make data-test-subset` adds the appropriate metadata files and video files to the local `data/` directory - make sure the data subset you are mounting to the container corresponds to the full set of matches you are packing in your submission.
 
 
 ### Logging
@@ -214,7 +214,7 @@ For convenience and consistency, the `vsc2022` repository, including the scoring
 
 ### Submitting without code
 
-As mentioned in [Developing your own submission](#developing-your-own-submission), you may if you wish create submissions that _only_ contain your descriptors and not a `main.py` script. In this case, the platform will run a similarity search based on your descriptors and score the generated rankings so you can see how your solution performs on the test set without having to get inference running in the runtime. However, these submissions will _not_ be eligible for Phase 2 or prizes and they will also count against the weekly submission limit
+As mentioned in [Developing your own submission](#developing-your-own-submission), you may if you wish create submissions that _only_ contain your matches and not a `main.py` script. In this case, the platform will score the generated matches so you can see how your solution performs on the test set without having to get inference running in the runtime. However, these submissions will _not_ be eligible for Phase 2 or prizes and they will also count against the weekly submission limit
 
 ### Runtime network access
 
@@ -284,10 +284,11 @@ Running `make` at the terminal will tell you all the commands available in the r
 ❯ make
 
 Settings based on your machine:
-SUBMISSION_IMAGE=f5f61cef3987   # ID of the image that will be used when running test-submission
+SUBMISSION_IMAGE=e9cee0331e31   # ID of the image that will be used when running test-submission
 
 Available competition images:
-meta-vsc-descriptor-runtime:cpu-local (f5f61cef3987); meta-vsc-descriptor-runtime:gpu-local (f314bbf3beed);
+meta-vsc-matching-runtime:cpu-local (e9cee0331e3); meta-vsc-matching-runtime:gpu-local (f314bbf3beed);
+1);
 
 Available commands:
 
