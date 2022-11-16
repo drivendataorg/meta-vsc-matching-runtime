@@ -32,6 +32,7 @@ This repository is a companion repository to the [`vsc2022` codebase](https://gi
  - [A working benchmark submission](#a-working-benchmark-submission) 
 ### [Additional information](#additional-information)
  - [Scoring your submission](#scoring-your-submission)
+ - [Submitting without code](#submitting-without-code)
  - [Runtime network access](#runtime-network-access)
  - [CPU and GPU](#cpu-and-gpu)
  - [Make commands](#make-commands)
@@ -60,32 +61,32 @@ First, make sure you have the prerequisites installed.
  Download the competition data to the `competition_data` by following the instructions on the [data download page](https://www.drivendata.org/competitions/106/meta-video-similarity-matching/data/). Once everything is downloaded and in the right location, it should look like this:
    
    ```
-   competition_data/                    # Competition data directory
-   ├── train/                           # Directory containing the training set
-   │   ├── query_metadata.csv           # Training set metadata file
-   │   ├── reference_metadata.csv       # Training set metadata file
-   │   ├── descriptor_ground_truth.csv  # Training set ground truth file
-   │   ├── matching_ground_truth.csv    # Training set ground truth file
-   │   ├── query/                       # Directory containing the test set query videos
+   competition_data/                          # Competition data directory
+   ├── train/                                 # Directory containing the training set
+   │   ├── train_query_metadata.csv           # Training set metadata file
+   │   ├── train_reference_metadata.csv       # Training set metadata file
+   │   ├── train_descriptor_ground_truth.csv  # Training set ground truth file
+   │   ├── train_matching_ground_truth.csv    # Training set ground truth file
+   │   ├── query/                             # Directory containing the test set query videos
    │   │   ├── Q100001.mp4
    │   │   ├── Q100002.mp4
    │   │   ├── Q100003.mp4
    │   │   └── ...
-   │   └── reference/                   # Directory containing the test set reference videos
+   │   └── reference/                         # Directory containing the test set reference videos
    │       ├── R100000.mp4
    │       ├── R100001.mp4
    │       ├── R100002.mp4
    │       └── ...
    │
-   └── test/                            # Directory containing the test set
-       ├── query_metadata.csv           # Test set query metadata file
-       ├── reference_metadata.csv       # Test set reference metadata file
-       ├── query/                       # Directory containing the test set query videos
+   └── test/                                  # Directory containing the test set
+       ├── test_query_metadata.csv            # Test set query metadata file
+       ├── test_reference_metadata.csv        # Test set reference metadata file
+       ├── query/                             # Directory containing the test set query videos
        │   ├── Q200001.mp4
        │   ├── Q200002.mp4
        │   ├── Q200003.mp4
        │   └── ...
-       └── reference/                   # Directory containing the test set reference videos
+       └── reference/                         # Directory containing the test set reference videos
            ├── R200000.mp4
            ├── R200001.mp4
            ├── R200002.mp4
@@ -149,6 +150,8 @@ Let's walk through what you'll need to do, step-by-step. The overall process her
    * Working off the `main.py` template we've provided, you'll want to add code as necessary to process the queries, cache intermediate results as necessary, and write out your matches.
    * Make sure any model weights or other files you need are also saved in `submission_src` (you can include these in that folder or in a subfolder, e.g., `submission_src/model_assets`)
 
+> Note: You may generate submissions that _only_ contain your matches, and not a `main.py` script. In this case, score your matches so you can see how your solution performs on the test set without having to get inference running in the runtime. However, these submissions will _not_ be eligible for Phase 2 or prizes and they will also count against the weekly submission limit.
+
 4. **Create a `submission/submission.zip` file containing your code and model assets:**
 
     ```bash
@@ -169,7 +172,7 @@ Let's walk through what you'll need to do, step-by-step. The overall process her
    ```
 
 
-> ⚠️ **Remember** in the official code execution environment, `/data` will contain just the subset of test set query videos along with the full metadata CSV files for the test query and reference sets. When testing locally, the `/data` directory is a mounted version of whatever you have saved locally in this project's `data/` directory. `make data-train-subset` and `make data-test-subset` adds the appropriate metadata files and video files to the local `data/` directory - make sure the data subset you are mounting to the container corresponds to the full set of descriptors you are packing in your submission.
+> ⚠️ **Remember** in the official code execution environment, `/data` will contain just the subset of test set query videos along with the full metadata CSV files for the test query and reference sets. When testing locally, the `/data` directory is a mounted version of whatever you have saved locally in this project's `data/` directory. `make data-train-subset` and `make data-test-subset` adds the appropriate metadata files and video files to the local `data/` directory - make sure the data subset you are mounting to the container corresponds to the full set of matches you are packing in your submission.
 
 
 ### Logging
@@ -208,6 +211,10 @@ Your workflow might look something like this:
 For convenience and consistency, the `vsc2022` repository, including the scoring scripts for both the descriptor track and the matching track, is included as a submodule of this runtime. The descriptor evaluation similarity search is also conducted by the code in this library. After cloning this repository, run `make update-submodules` to download the contents of `vsc2022` into the specified folder, and unpack the `submission.tar.gz` folder to obtain the generated matches files to provide to `vsc2022/matching_eval.py`.
 
 > Note: When evaluating your generated subset submission on the training set, you should provide only the subset of the ground truth that contains the query videos in the subset.
+
+### Submitting without code
+
+As mentioned in [Developing your own submission](#developing-your-own-submission), you may if you wish create submissions that _only_ contain your matches and not a `main.py` script. In this case, the platform will score the generated matches so you can see how your solution performs on the test set without having to get inference running in the runtime. However, these submissions will _not_ be eligible for Phase 2 or prizes and they will also count against the weekly submission limit
 
 ### Runtime network access
 
@@ -277,10 +284,11 @@ Running `make` at the terminal will tell you all the commands available in the r
 ❯ make
 
 Settings based on your machine:
-SUBMISSION_IMAGE=f5f61cef3987   # ID of the image that will be used when running test-submission
+SUBMISSION_IMAGE=e9cee0331e31   # ID of the image that will be used when running test-submission
 
 Available competition images:
-meta-vsc-descriptor-runtime:cpu-local (f5f61cef3987); meta-vsc-descriptor-runtime:gpu-local (f314bbf3beed);
+meta-vsc-matching-runtime:cpu-local (e9cee0331e3); meta-vsc-matching-runtime:gpu-local (f314bbf3beed);
+1);
 
 Available commands:
 
