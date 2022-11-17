@@ -67,7 +67,7 @@ def main(args: Namespace):
     copyfile(reference_metadata, runtime_data_dir / "reference_metadata.csv")
 
     if args.dataset == "train":
-        train_ground_truth = dataset_folder / "train_descriptor_ground_truth.csv"
+        train_ground_truth = dataset_folder / "train_matching_ground_truth.csv"
         copyfile(train_ground_truth, runtime_data_dir / train_ground_truth.name)
         ground_truth_subset_df = pd.read_csv(train_ground_truth).set_index("query_id")
         ground_truth_subset_df.loc[
