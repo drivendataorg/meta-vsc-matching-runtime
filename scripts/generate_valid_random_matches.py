@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 QUICKSTART_DIRECTORY = Path(__file__).parent.parent / "submission_quickstart"
-DATA_DIRECTORY = QUICKSTART_DIRECTORY.parent / "data"
+DATA_DIRECTORY = QUICKSTART_DIRECTORY.parent / "data" / "test"
 QUERY_METADATA_PATH = DATA_DIRECTORY / "query_metadata.csv"
 REFERENCE_METADATA_PATH = DATA_DIRECTORY / "reference_metadata.csv"
 MATCHES_OUTPUT_FILE = QUICKSTART_DIRECTORY / "full_matches.csv"
