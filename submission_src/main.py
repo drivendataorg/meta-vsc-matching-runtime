@@ -20,7 +20,7 @@ def generate_matches(query_video_ids) -> pd.DataFrame:
 def main():
     # Loading subset of query images
     query_subset = pd.read_csv(DATA_DIRECTORY / "query_subset.csv")
-    query_subset_video_ids = query_subset.query_ids.values
+    query_subset_video_ids = query_subset.video_ids.values
 
     # Generation of query descriptors happens here #
     matches = generate_matches(query_subset_video_ids)
