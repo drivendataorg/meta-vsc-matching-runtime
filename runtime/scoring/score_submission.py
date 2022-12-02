@@ -252,7 +252,7 @@ def main(
         help="Path to ground truth CSV file.",
     ),
 ):
-    """Evaluate a submission for the Meta Video Similarity Challenge, Matching Track."""
+    """Evaluate a submission for the Meta AI Video Similarity Challenge, Matching Track."""
     predicted = pd.read_csv(submission_path)
     actual = pd.read_csv(ground_truth_path)
 
