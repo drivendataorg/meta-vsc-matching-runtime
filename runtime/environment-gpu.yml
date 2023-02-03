@@ -34,5 +34,6 @@ dependencies:
   - tslearn=0.5.2
   - pip: 
     - augly[image,video]==1.0.0
+    - imageio[ffmpeg]==2.25.0
     - lightning-flash[video,image]==0.8.1
     - tensorflow-gpu==2.9.1
