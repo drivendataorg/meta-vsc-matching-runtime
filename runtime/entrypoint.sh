@@ -22,7 +22,7 @@ exit_code=0
             --path full_matches.csv
     else
         echo "ERROR: Could not find full_matches.csv"
-        exit_code=1
+        exit 1
     fi
 
     # Use submitted code to generate matches on a subset of query videos
