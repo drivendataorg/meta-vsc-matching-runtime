@@ -5,7 +5,6 @@ import warnings
 
 import pytest
 
-
 packages = [
     # these are problem libraries that don't always seem to import, mostly due
     # to dependencies outside the python world

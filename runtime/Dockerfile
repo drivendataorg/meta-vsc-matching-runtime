@@ -74,6 +74,7 @@ RUN mamba env create --name ${CONDA_ENV} -f /home/${RUNTIME_USER}/environment.ym
 
 # Copy run script into working dir and set it as the working doie
 USER root
+COPY ./runtime/validation.py /opt/validation.py
 WORKDIR /code_execution
 RUN mkdir predictions submission
 COPY --chown=appuser:appuser ./runtime/tests /code_execution/tests

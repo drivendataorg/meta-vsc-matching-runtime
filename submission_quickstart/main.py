@@ -37,15 +37,17 @@ def generate_random_matches(query_meta, ref_meta) -> pd.DataFrame:
 
             score = rng.random()
 
-            matches.append({
-                "query_id": query.video_id.values[0],
-                "ref_id": ref.video_id.values[0],
-                "query_start": query_start,
-                "query_end": query_end,
-                "ref_start": ref_start,
-                "ref_end": ref_end,
-                "score": score
-            })
+            matches.append(
+                {
+                    "query_id": query.video_id.values[0],
+                    "ref_id": ref.video_id.values[0],
+                    "query_start": query_start,
+                    "query_end": query_end,
+                    "ref_start": ref_start,
+                    "ref_end": ref_end,
+                    "score": score,
+                }
+            )
 
     return pd.DataFrame.from_records(matches)
 
@@ -57,7 +59,7 @@ def main():
     ### Generation of query matches happens here ######
     matches = generate_random_matches(query_metadata, reference_metadata)
 
-    matches.to_csv(OUTPUT_FILE,index=False)
+    matches.to_csv(OUTPUT_FILE, index=False)
 
 
 if __name__ == "__main__":

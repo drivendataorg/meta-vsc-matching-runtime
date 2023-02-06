@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from shutil import copyfile, move
+from shutil import copyfile
 
 import numpy as np
 import pandas as pd
@@ -41,7 +41,9 @@ def main(args: Namespace):
     ]:
         if not file.exists():
             raise FileExistsError(
-                f"Error: {file} not found. Have you downloaded or symlinked the competition dataset into {competition_data_dir}?"
+                f"Error: {file} not found. Have you downloaded "
+                f"or symlinked the competition dataset into "
+                f"{competition_data_dir}?"
             )
 
     p_subset = args.subset_proportion
@@ -53,8 +55,7 @@ def main(args: Namespace):
         int(np.ceil(query_metadata_df.shape[0] * p_subset)), random_state=rng
     )
 
-    # Copy metadata files and chosen videoss
-
+    # Copy metadata files and chosen videos
     subset_query_ids.sort_values().to_csv(
         runtime_data_dir / "query_subset.csv", index=False
     )
