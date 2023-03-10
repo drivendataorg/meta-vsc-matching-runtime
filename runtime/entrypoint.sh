@@ -29,7 +29,9 @@ exit_code=0
     if [ -f "main.py" ]
     then
         echo "Generating matches on a subset of query videos..."
+        echo "Started at $(date -u +'%Y-%m-%dT%H:%M:%SZ') ($(date +%s))"
         conda run --no-capture-output -n condaenv python main.py
+        echo "Finished at $(date -u +'%Y-%m-%dT%H:%M:%SZ') ($(date +%s))"
 
         echo "Validating matches subset..."
         conda run --no-capture-output -n condaenv \
