@@ -39,9 +39,16 @@ exit_code=0
             --path subset_matches.csv
 
 	    echo "... finished"
+    else
+        echo $PHASE2
+        if [ "$PHASE2" == "true" ]
+        then
+            echo "ERROR: Non-code execution submissions are not allowed in Phase 2"
+            exit 1
         else
-            echo "WARNING: Could not find main.py in submission.zip, generating empty file"
+            echo "WARNING: Could not find main.py in submission.zip"
             touch subset_matches.csv
+        fi
     fi
 
     # Tar the full matches csv and the subset matches csv together to form the submission file
